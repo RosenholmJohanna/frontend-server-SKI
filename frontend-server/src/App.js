@@ -19,26 +19,36 @@ function App() {
         throw new Error('Login failed');
       }
 
-      const result = await response.json();
-      localStorage.setItem('access_token', result.token);
+    const result = await response.json();
+      //const token = result.access_token; //
+      //console.log('before set in storage', result.accessToken)
+      //localStorage.setItem('access_token', token); // undefined
+      localStorage.setItem('access_token', result.accessToken);
       setAuthenticated(true);
+      // console.log(result)
+      // console.log(localStorage)
     } catch (error) {
       alert(error.message || 'Login failed!');
     }
   };
 
+    
   const handleLogout = () => {
-    localStorage.removeItem('access_token');  // Remove token
-    setAuthenticated(false);  // Update authentication state
-    setData(null);  // Clear fetched data
+    localStorage.removeItem('access_token');  
+    setAuthenticated(false);  
+    setData(null);  
   };
 
   const fetchData = async () => {
     try {
       const token = localStorage.getItem('access_token');
+          console.log('Token sent from frontend:', token); // token, can be seen in backend-server
       const response = await fetch('http://localhost:3002/data', {
         headers: { Authorization: `Bearer ${token}` }
-      });
+      },
+      console.log(`Bearer ${token}`)
+      );
+      
       
       if (!response.ok) {
         if (response.status === 401) {  // Unauthorized
